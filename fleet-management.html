@@ -1000,7 +1000,9 @@
     </table>
   </div>
 </section> 
-<script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
   const trips = [];
 
   function renderTrips() {
@@ -1014,25 +1016,6 @@
           <td class="p-2 border">${trip.pickup}</td>
           <td class="p-2 border">${trip.dropoff}</td>
           <td class="p-2 border">${trip.date}</td>
-          <td class="p-2 border">${trip.time}</td>
-          <td class="p-2 border">${trip.mobility}</td>
-          <td class="p-2 border font-semibold">${trip.status}</td>
-          <td class="p-2 border">
-            <button onclick="updateStatus(${index}, 'In Progress')" class="text-blue-600 mr-2">Start</button>
-            <button onclick="updateStatus(${index}, 'Completed')" class="text-green-600 mr-2">Complete</button>
-            <button onclick="updateStatus(${index}, 'Cancelled')" class="text-red-600">Cancel</button>
-          </td>
-        </tr>
-      `;
-    });
-  }
-<script>
-  const trips = [];
-
-  function renderTrips() {
-    const table = document.getElementById("tripsTable");
-    table.innerHTML = "";
-
     trips.forEach((trip, index) => {
       table.innerHTML += `
         <tr>
