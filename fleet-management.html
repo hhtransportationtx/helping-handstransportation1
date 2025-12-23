@@ -561,7 +561,8 @@
         document.addEventListener('DOMContentLoaded', function() {
             initializeFleetData();
             initializeFleetCharts();
-        });
+        renderTrips();
+            });
 
         function initializeFleetData() {
             if (!window.helpingHands) return;
@@ -1038,6 +1039,8 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     trips.push(trip);
+    localStorage.setItem("trips",
+    JSON.stringify(trips));
     renderTrips();
     form.reset();
   });
