@@ -1,6 +1,7 @@
-// Helping Hands Transportation - Main Application Logic
+=// Helping Hands Transportation - Main Application Logic
 
-class HelpingHandsTransportation {
+class HelpingHandsTransportation {  
+    
     constructor() {
         this.activeTrips = [];
         this.availableVehicles = [];
