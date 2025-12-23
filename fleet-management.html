@@ -1004,7 +1004,8 @@
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
-  let trips = JSON.parse(localStorage.getItem("trips")) || [];
+  let trips = 
+  JSON.parse(localStorage.getItem("trips")) || [];
   const form = document.getElementById("createTripForm");
   const table = document.getElementById("tripsTable");
 
@@ -1028,27 +1029,27 @@ document.addEventListener("DOMContentLoaded", function () {
   form.addEventListener("submit", function (e) {
     e.preventDefault();
 
-    let trips = JSON.parse(localStorage.getItem("trips")) || [];
-      member: document.getElementById("memberName").value,
-      pickup: document.getElementById("pickupAddress").value,
-      dropoff: document.getElementById("dropoffAddress").value,
-      date: document.getElementById("pickupDate").value,
-      time: document.getElementById("pickupTime").value,
-      mobility: document.getElementById("mobilityType").value,
-      status: "Scheduled"
-    };
+    const trip = {
+  member: document.getElementById("memberName").value,
+  pickup: document.getElementById("pickupAddress").value,
+  dropoff: document.getElementById("dropoffAddress").value,
+  date: document.getElementById("pickupDate").value,
+  time: document.getElementById("pickupTime").value,
+  mobility: document.getElementById("mobilityType").value,
+  status: "Scheduled"
+};
 
     trips.push(trip);
     localStorage.setItem("trips",
     JSON.stringify(trips));
+    
     renderTrips();
     form.reset();
   });
-
 });
 </script>
 
-</script> ← closes script
+
 
 
 </body>
