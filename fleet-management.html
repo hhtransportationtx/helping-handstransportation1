@@ -1000,15 +1000,45 @@
     </table>
   </div>
 </section> 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
+<script>
+document.addEventListener("DOMContentLoaded", function () {
 
   const trips = [];
+  const form = document.getElementById("createTripForm");
+  const table = document.getElementById("tripsTable");
 
   function renderTrips() {
-    const table = document.getElementById("tripsTable");
     table.innerHTML = "";
+    trips.forEach((trip, index) => {
+      table.innerHTML += `
+        <tr>
+          <td class="border p-2">${trip.member}</td>
+          <td class="border p-2">${trip.pickup}</td>
+          <td class="border p-2">${trip.dropoff}</td>
+          <td class="border p-2">${trip.date}</td>
+          <td class="border p-2">${trip.time}</td>
+          <td class="border p-2">${trip.mobility}</td>
+          <td class="border p-2 font-semibold">${trip.status}</td>
+        </tr>
+      `;
+    });
+  }
+form.addEventListener("submit", function (e) {
+e.preventDefault();
+ const trip = {
+ member: document.getElementById("memberName").value,
+ pickup: document.getElementById("pickupAddress").value,
+ dropoff: document.getElementById("dropoffAddress").value,
+ date: document.getElementById("pickupDate").value,
+ time: document.getElementById("pickupTime").value,
+ mobility: document.getElementById("mobilityType").value,
+status: "Scheduled"
+ };
 
+1039 trips.push(trip);
+1040 renderTrips();
+1041 form.reset();
+1042 });
     trips.forEach((trip, index) => {
       table.innerHTML += `
         <tr>
@@ -1046,29 +1076,8 @@
     renderTrips();
   }
 </script>
-  trips.push(trip);
-  renderTrips();
-  this.reset();
-});
 
-function renderTrips() {
-  const table = document.getElementById("tripsTable");
-  table.innerHTML = "";
 
-  trips.forEach(trip => {
-    table.innerHTML += `
-      <tr>
-        <td class="border p-2">${trip.member}</td>
-        <td class="border p-2">${trip.pickup}</td>
-        <td class="border p-2">${trip.dropoff}</td>
-        <td class="border p-2">${trip.date}</td>
-        <td class="border p-2">${trip.time}</td>
-        <td class="border p-2">${trip.mobility}</td>
-        <td class="border p-2 text-green-600 font-semibold">${trip.status}</td>
-      </tr>
-    `;
-  });
-}
-</script>
+
 </body>
 </html>
