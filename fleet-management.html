@@ -984,22 +984,54 @@
     <table class="w-full border text-sm">
       <thead class="bg-gray-100">
         <tr>
-          <th class="p-2 border">Member</th>
-          <th class="p-2 border">Pickup</th>
-          <th class="p-2 border">Dropoff</th>
-          <th class="p-2 border">Date</th>
-          <th class="p-2 border">Time</th>
-          <th class="p-2 border">Mobility</th>
-          <th class="p-2 border">Status</th>
-        </tr>
+  <th class="p-2 border">Member</th>
+  <th class="p-2 border">Pickup</th>
+  <th class="p-2 border">Dropoff</th>
+  <th class="p-2 border">Date</th>
+  <th class="p-2 border">Time</th>
+  <th class="p-2 border">Mobility</th>
+  <th class="p-2 border">Status</th>
+  <th class="p-2 border">Actions</th>
+</tr>
+         
+
       </thead>
       <tbody id="tripsTable"></tbody>
     </table>
   </div>
 </section> 
-    <script>
-const trips = [];
+<script>
+  const trips = [];
 
+  function renderTrips() {
+    const table = document.getElementById("tripsTable");
+    table.innerHTML = "";
+
+    trips.forEach((trip, index) => {
+      table.innerHTML += `
+        <tr>
+          <td class="p-2 border">${trip.member}</td>
+          <td class="p-2 border">${trip.pickup}</td>
+          <td class="p-2 border">${trip.dropoff}</td>
+          <td class="p-2 border">${trip.date}</td>
+          <td class="p-2 border">${trip.time}</td>
+          <td class="p-2 border">${trip.mobility}</td>
+          <td class="p-2 border font-semibold">${trip.status}</td>
+          <td class="p-2 border">
+            <button onclick="updateStatus(${index}, 'In Progress')" class="text-blue-600 mr-2">Start</button>
+            <button onclick="updateStatus(${index}, 'Completed')" class="text-green-600 mr-2">Complete</button>
+            <button onclick="updateStatus(${index}, 'Cancelled')" class="text-red-600">Cancel</button>
+          </td>
+        </tr>
+      `;
+    });
+  }
+
+  function updateStatus(index, newStatus) {
+    trips[index].status = newStatus;
+    renderTrips();
+  }
+</script>
 document.getElementById("createTripForm").addEventListener("submit", function (e) {
   e.preventDefault();
 
