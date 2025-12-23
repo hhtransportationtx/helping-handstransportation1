@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Helping Hands Driver App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --deep-teal: #2C5F5D;
+            --sage-green: #7BA05B;
+            --warm-coral: #E07A5F;
+            --gentle-blue: #81A7C7;
+            --sunshine-yellow: #F2CC8F;
+            --soft-gray: #F8F9FA;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--soft-gray);
+            color: #3D3D3D;
+            padding-bottom: 80px; /* Space for bottom navigation */
+        }
+        
+        .driver-header {
+            background: linear-gradient(135deg, var(--deep-teal), var(--sage-green));
+            color: white;
+        }
+        
+        .trip-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid var(--deep-teal);
+        }
+        
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-active {
+            background: var(--sage-green);
+            color: white;
+        }
+        
+        .status-pending {
+            background: var(--sunshine-yellow);
+            color: #3D3D3D;
+        }
+        
+        .status-completed {
+            background: #E5E7EB;
+            color: #6B7280;
+        }
+        
+        .primary-btn {
+            background: var(--deep-teal);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            border: none;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        
+        .primary-btn:hover {
+            background: var(--sage-green);
+            transform: translateY(-2px);
+        }
+        
+        .secondary-btn {
+            background: white;
+            border: 2px solid var(--deep-teal);
+            color: var(--deep-teal);
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        
+        .secondary-btn:hover {
+            background: var(--deep-teal);
+            color: white;
+        }
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #E5E7EB;
+            padding: 8px 0;
+            z-index: 1000;
+        }
+        
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px;
+            text-decoration: none;
+            color: #6B7280;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-item.active {
+            color: var(--deep-teal);
+        }
+        
+        .nav-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+        
+        .nav-label {
+            font-size: 10px;
+            font-weight: 500;
+        }
+        
+        .patient-info-card {
+            background: linear-gradient(135deg, #F0F9FF, #E0F2FE);
+            border: 1px solid var(--gentle-blue);
+        }
+        
+        .medical-alert {
+            background: #FEF2F2;
+            border: 1px solid #FECACA;
+            color: #DC2626;
+        }
+        
+        .accessibility-badge {
+            background: var(--lavender);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+        
+        .trip-step {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border-left: 4px solid #E5E7EB;
+        }
+        
+        .trip-step.active {
+            border-left-color: var(--sage-green);
+            background: #F0FDF4;
+        }
+        
+        .trip-step.completed {
+            border-left-color: var(--sage-green);
+            background: #F9FAFB;
+        }
+        
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #E5E7EB;
+            color: #6B7280;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 16px;
+        }
+        
+        .step-number.active {
+            background: var(--sage-green);
+            color: white;
+        }
+        
+        .step-number.completed {
+            background: var(--sage-green);
+            color: white;
+        }
+        
+        .signature-pad {
+            border: 2px dashed #D1D5DB;
+            border-radius: 8px;
+            background: white;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: crosshair;
+        }
+        
+        .emergency-btn {
+            background: #DC2626;
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 18px;
+            width: 100%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            padding: 16px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            transform: translateY(-100px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .notification.show {
+            transform: translateY(0);
+        }
+        
+        .notification-success {
+            background: var(--sage-green);
+        }
+        
+        .notification-info {
+            background: var(--deep-teal);
+        }
+        
+        .notification-warning {
+            background: var(--sunshine-yellow);
+            color: #3D3D3D;
+        }
+        
+        .notification-emergency {
+            background: #DC2626;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="driver-header p-4">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center">
+                <div class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center mr-3">
+                    <span class="text-xl">🚐</span>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold">Helping Hands Driver</h1>
+                    <p class="text-sm opacity-90">Professional NEMT Services</p>
+                </div>
+            </div>
+            <div class="text-right">
+                <div class="text-sm opacity-90">Driver ID</div>
+                <div class="font-bold">DR-1847</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Current Trip Section -->
+    <section class="p-4">
+        <div class="trip-card p-4 mb-4">
+            <div class="flex items-center justify-between mb-3">
+                <h2 class="text-lg font-bold">Current Trip</h2>
+                <span class="status-badge status-active">Active</span>
+            </div>
+            
+            <div class="patient-info-card p-3 rounded-lg mb-4">
+                <div class="flex items-center mb-2">
+                    <span class="text-2xl mr-3">👤</span>
+                    <div>
+                        <h3 class="font-bold text-gray-900">Eleanor Roosevelt</h3>
+                        <p class="text-sm text-gray-600">Age 78 • Medicaid Patient</p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                        <span class="text-gray-600">Phone:</span>
+                        <span class="font-medium">+1 (555) 111-2222</span>
+                    </div>
+                    <div>
+                        <span class="text-gray-600">Trip #:</span>
+                        <span class="font-medium">#1001</span>
+                    </div>
+                </div>
+                
+                <div class="mt-2">
+                    <span class="accessibility-badge">♿ Wheelchair Access</span>
+                    <span class="accessibility-badge ml-2">💨 Oxygen Tank</span>
+                </div>
+            </div>
+            
+            <div class="medical-alert p-3 rounded-lg mb-4">
+                <div class="flex items-center">
+                    <span class="text-xl mr-2">⚠️</span>
+                    <div>
+                        <div class="font-semibold">Medical Alert</div>
+                        <div class="text-sm">Patient requires oxygen tank during transport</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="space-y-3">
+                <div class="trip-step completed">
+                    <div class="step-number completed">1</div>
+                    <div class="flex-1">
+                        <div class="font-semibold">Pickup Confirmed</div>
+                        <div class="text-sm text-gray-600">123 Main St, New York, NY</div>
+                        <div class="text-sm text-gray-500">8:45 AM</div>
+                    </div>
+                    <span class="text-green-500 text-xl">✅</span>
+                </div>
+                
+                <div class="trip-step active">
+                    <div class="step-number active">2</div>
+                    <div class="flex-1">
+                        <div class="font-semibold">En Route to Destination</div>
+                        <div class="text-sm text-gray-600">NYU Langone Medical Center</div>
+                        <div class="text-sm text-blue-600">ETA: 9:05 AM</div>
+                    </div>
+                    <span class="text-blue-500 text-xl">🚐</span>
+                </div>
+                
+                <div class="trip-step">
+                    <div class="step-number">3</div>
+                    <div class="flex-1">
+                        <div class="font-semibold">Drop-off & Signature</div>
+                        <div class="text-sm text-gray-600">Awaiting arrival</div>
+                    </div>
+                    <span class="text-gray-400 text-xl">📝</span>
+                </div>
+            </div>
+            
+            <div class="mt-4 pt-4 border-t border-gray-200">
+                <div class="flex space-x-2">
+                    <button onclick="startNavigation()" class="primary-btn">
+                        🗺️ Start Navigation
+                    </button>
+                    <button onclick="contactDispatch()" class="secondary-btn">
+                        📞 Contact Dispatch
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Today's Schedule -->
+    <section class="p-4">
+        <h2 class="text-lg font-bold mb-4">Today's Schedule</h2>
+        
+        <div class="space-y-3">
+            <div class="bg-white rounded-lg p-4 shadow-sm border-l-4 border-green-500">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="font-semibold text-gray-900">Trip #1001</div>
+                    <span class="status-badge status-active">Active</span>
+                </div>
+                <div class="text-sm text-gray-600">Eleanor Roosevelt • NYU Langone</div>
+                <div class="text-sm text-gray-500">9:00 AM - Dialysis</div>
+            </div>
+            
+            <div class="bg-white rounded-lg p-4 shadow-sm border-l-4 border-gray-300">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="font-semibold text-gray-900">Trip #1002</div>
+                    <span class="status-badge status-pending">Pending</span>
+                </div>
+                <div class="text-sm text-gray-600">John Smith • Mount Sinai</div>
+                <div class="text-sm text-gray-500">10:30 AM - Physical Therapy</div>
+            </div>
+            
+            <div class="bg-white rounded-lg p-4 shadow-sm border-l-4 border-gray-300">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="font-semibold text-gray-900">Trip #1003</div>
+                    <span class="status-badge status-pending">Pending</span>
+                </div>
+                <div class="text-sm text-gray-600">Catherine Brown • Memorial Hospital</div>
+                <div class="text-sm text-gray-500">1:00 PM - Chemotherapy</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trip Completion Modal (Hidden by default) -->
+    <div id="trip-completion-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg p-6 w-full max-w-md">
+                <h3 class="text-lg font-bold mb-4">Trip Completion</h3>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Patient Signature</label>
+                    <div class="signature-pad" id="signature-pad">
+                        <span class="text-gray-500">Tap here to sign</span>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Trip Notes</label>
+                    <textarea class="w-full p-3 border border-gray-300 rounded-lg" rows="3" placeholder="Any additional notes about this trip..."></textarea>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="flex items-center">
+                        <input type="checkbox" class="mr-2">
+                        <span class="text-sm">Patient delivered safely to destination</span>
+                    </label>
+                </div>
+                
+                <div class="flex space-x-2">
+                    <button onclick="completeTrip()" class="primary-btn">
+                        Complete Trip
+                    </button>
+                    <button onclick="closeCompletionModal()" class="secondary-btn">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Emergency Section -->
+    <section class="p-4">
+        <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+            <h3 class="font-bold text-red-800 mb-2">Emergency Protocols</h3>
+            <p class="text-sm text-red-700 mb-3">For immediate medical emergencies or safety concerns</p>
+            <button onclick="handleEmergency()" class="emergency-btn">
+                🚨 EMERGENCY ASSISTANCE
+            </button>
+        </div>
+    </section>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <div class="flex">
+            <a href="#" class="nav-item active">
+                <span class="nav-icon">🚐</span>
+                <span class="nav-label">Dashboard</span>
+            </a>
+            <a href="#" class="nav-item" onclick="showSchedule()">
+                <span class="nav-icon">📅</span>
+                <span class="nav-label">Schedule</span>
+            </a>
+            <a href="#" class="nav-item" onclick="showMessages()">
+                <span class="nav-icon">💬</span>
+                <span class="nav-label">Messages</span>
+            </a>
+            <a href="#" class="nav-item" onclick="showProfile()">
+                <span class="nav-icon">👤</span>
+                <span class="nav-label">Profile</span>
+            </a>
+        </div>
+    </nav>
+
+    <script>
+        // Driver App Functions
+        function startNavigation() {
+            showNotification('Opening navigation app...', 'info');
+            // In a real app, this would open Google Maps or Waze
+        }
+
+        function contactDispatch() {
+            showNotification('Calling dispatch center...', 'info');
+            // In a real app, this would initiate a phone call
+        }
+
+        function completeTrip() {
+            document.getElementById('trip-completion-modal').classList.remove('hidden');
+        }
+
+        function closeCompletionModal() {
+            document.getElementById('trip-completion-modal').classList.add('hidden');
+        }
+
+        function handleEmergency() {
+            showNotification('Emergency services contacted. Help is on the way.', 'emergency');
+            // In a real app, this would contact emergency services and dispatch
+        }
+
+        function showSchedule() {
+            showNotification('Schedule feature coming soon!', 'info');
+        }
+
+        function showMessages() {
+            showNotification('Messages feature coming soon!', 'info');
+        }
+
+        function showProfile() {
+            showNotification('Profile feature coming soon!', 'info');
+        }
+
+        function completeTrip() {
+            closeCompletionModal();
+            showNotification('Trip completed successfully! Great job!', 'success');
+            // In a real app, this would submit the trip completion data
+        }
+
+        // Notification system
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 4000);
+        }
+
+        // Signature pad functionality
+        let signaturePad = document.getElementById('signature-pad');
+        if (signaturePad) {
+            signaturePad.addEventListener('click', function() {
+                this.innerHTML = '<span class=\"text-teal-600 font-semibold\">✍️ Signature captured</span>';
+                this.style.borderColor = '#2C5F5D';
+                this.style.backgroundColor = '#F0FDF4';
+            });
+        }
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            showNotification('Driver app initialized. Have a safe day!', 'success');
+            
+            // Animate elements on load
+            if (typeof anime !== 'undefined') {
+                anime({
+                    targets: '.trip-card, .bg-white',
+                    translateY: [30, 0],
+                    opacity: [0, 1],
+                    delay: anime.stagger(100),
+                    duration: 800,
+                    easing: 'easeOutQuart'
+                });
+            }
+        });
+
+        // Add CSS custom properties
+        document.documentElement.style.setProperty('--deep-teal', '#2C5F5D');
+        document.documentElement.style.setProperty('--sage-green', '#7BA05B');
+        document.documentElement.style.setProperty('--warm-coral', '#E07A5F');
+        document.documentElement.style.setProperty('--gentle-blue', '#81A7C7');
+        document.documentElement.style.setProperty('--sunshine-yellow', '#F2CC8F');
+        document.documentElement.style.setProperty('--soft-gray', '#F8F9FA');
+    </script>
+</body>
+</html>

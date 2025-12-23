@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Helping Hands Transportation - NEMT Management Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Crimson+Pro:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --deep-teal: #2C5F5D;
+            --sage-green: #7BA05B;
+            --warm-coral: #E07A5F;
+            --gentle-blue: #81A7C7;
+            --sunshine-yellow: #F2CC8F;
+            --soft-gray: #F8F9FA;
+            --charcoal: #3D3D3D;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--soft-gray);
+            color: var(--charcoal);
+        }
+        
+        .hero-bg {
+            background-image: linear-gradient(rgba(44, 95, 93, 0.8), rgba(44, 95, 93, 0.9)), url('resources/helping-hands-hero.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        
+        .dashboard-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .metric-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .metric-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--deep-teal);
+            margin-bottom: 0.5rem;
+        }
+        
+        .metric-label {
+            color: #6B7280;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            letter-spacing: 0.05em;
+        }
+        
+        .trip-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--deep-teal);
+            transition: all 0.3s ease;
+        }
+        
+        .trip-card:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .vehicle-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .vehicle-card:hover {
+            border-color: var(--deep-teal);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .primary-btn {
+            background: var(--deep-teal);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .primary-btn:hover {
+            background: var(--sage-green);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(44, 95, 93, 0.3);
+        }
+        
+        .secondary-btn {
+            background: white;
+            border: 2px solid var(--deep-teal);
+            color: var(--deep-teal);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .secondary-btn:hover {
+            background: var(--deep-teal);
+            color: white;
+        }
+        
+        .navigation {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo {
+            height: 40px;
+            width: auto;
+            margin-right: 12px;
+        }
+        
+        .brand-name {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--deep-teal);
+        }
+        
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-available {
+            background: var(--sage-green);
+            color: white;
+        }
+        
+        .status-en-route {
+            background: var(--gentle-blue);
+            color: white;
+        }
+        
+        .status-transporting {
+            background: var(--sunshine-yellow);
+            color: var(--charcoal);
+        }
+        
+        .status-break {
+            background: #E5E7EB;
+            color: #6B7280;
+        }
+        
+        .emergency-btn {
+            background: #DC2626;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 700;
+            border: none;
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            max-width: 400px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification-success {
+            background: var(--sage-green);
+        }
+        
+        .notification-info {
+            background: var(--deep-teal);
+        }
+        
+        .notification-warning {
+            background: var(--sunshine-yellow);
+            color: var(--charcoal);
+        }
+        
+        .notification-emergency {
+            background: #DC2626;
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+        }
+        
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+        
+        .progress-ring-circle {
+            stroke: var(--sage-green);
+            stroke-width: 4;
+            fill: transparent;
+            stroke-dasharray: 251.2;
+            stroke-dashoffset: 251.2;
+            transition: stroke-dashoffset 0.5s ease;
+        }
+        
+        @media (max-width: 768px) {
+            .metric-number {
+                font-size: 2rem;
+            }
+            
+            .chart-container {
+                padding: 1rem;
+            }
+            
+            .brand-name {
+                font-size: 1.25rem;
+            }
+            
+            .logo {
+                height: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navigation fixed w-full top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="logo-container">
+                    <img src="HH Logo White.png" alt="Helping Hands Transportation" class="logo">
+                    <div class="brand-name">
+                        Helping Hands Transportation
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#" class="text-gray-900 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Dashboard</a>
+                        <a href="fleet-management.html" class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Fleet</a>
+                        <a href="billing-compliance.html" class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Billing</a>
+                        <a href="driver-app.html" target="_blank" class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Driver App</a>
+                        <button onclick="showNewTripModal()" class="primary-btn ml-4">New Trip</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-bg min-h-96 flex items-center justify-center text-white relative">
+        <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+            <div class="hero-content">
+                <h1 class="text-4xl md:text-5xl font-bold mb-6">
+                    Compassionate Care.<br>
+                    Reliable Transport.<br>
+                    <span class="text-yellow-300">Better Outcomes.</span>
+                </h1>
+                <p class="text-xl mb-8 max-w-2xl mx-auto">
+                    Advanced NEMT management platform designed to improve patient care, 
+                    streamline operations, and ensure regulatory compliance.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button onclick="scrollToDashboard()" class="primary-btn">
+                        View Dashboard
+                    </button>
+                    <button onclick="navigateToPage('driver-app.html')" class="bg-white text-gray-900 px-8 py-3 rounded-md font-semibold hover:bg-gray-100 transition-colors">
+                        Driver Mobile App
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Dashboard -->
+    <section id="dashboard-section" class="py-12 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Live Operations Dashboard</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Real-time monitoring of trips, vehicles, and patient care quality
+                </p>
+            </div>
+
+            <!-- Key Metrics -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 mb-8">
+                <div class="metric-card text-center">
+                    <div class="metric-number" id="active-trips">0</div>
+                    <div class="metric-label">Active Trips</div>
+                </div>
+
+                <div class="metric-card text-center">
+                    <div class="metric-number" id="available-vehicles">0</div>
+                    <div class="metric-label">Available Vehicles</div>
+                </div>
+
+                <div class="metric-card text-center">
+                    <div class="metric-number" id="on-time-performance">0%</div>
+                    <div class="metric-label">On-Time Rate</div>
+                </div>
+
+                <div class="metric-card text-center">
+                    <div class="metric-number" id="patient-satisfaction">0%</div>
+                    <div class="metric-label">Patient Satisfaction</div>
+                </div>
+
+                <div class="metric-card text-center">
+                    <div class="metric-number" id="completed-today">0</div>
+                    <div class="metric-label">Trips Today</div>
+                </div>
+
+                <div class="metric-card text-center">
+                    <div class="metric-number" id="revenue-today">$0</div>
+                    <div class="metric-label">Revenue Today</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Dispatch Map -->
+                <div class="lg:col-span-2">
+                    <div class="dashboard-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-bold text-gray-900">Live Vehicle Tracking</h3>
+                            <div class="flex space-x-2">
+                                <button onclick="centerMap()" class="secondary-btn">Center Map</button>
+                                <button onclick="refreshVehicles()" class="secondary-btn">Refresh</button>
+                                <button id="ai-assistant-btn" class="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition-colors">
+                                    🤖 AI Assistant
+                                </button>
+                                <button id="walkie-talkie-btn" class="bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700 transition-colors">
+                                    🎙️ Walkie Talkie
+                                </button>
+                                <button id="sms-btn" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
+                                    📱 Send SMS
+                                </button>
+                            </div>
+                        </div>
+                        <div id="dispatch-map" style="height: 400px; border-radius: 8px;"></div>
+                    </div>
+                </div>
+
+                <!-- Active Trips -->
+                <div class="space-y-6">
+                    <div class="dashboard-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-bold text-gray-900">Active Trips</h3>
+                            <span class="text-sm text-gray-500">Real-time status</span>
+                        </div>
+                        <div id="active-trips-list" class="space-y-3 max-h-96 overflow-y-auto">
+                            <!-- Active trips will be populated here -->
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-bold text-gray-900">Recent Activity</h3>
+                            <button onclick="refreshActivity()" class="text-sm text-teal-600 hover:text-teal-700">Refresh</button>
+                        </div>
+                        <div id="recent-activity" class="space-y-2 max-h-64 overflow-y-auto">
+                            <!-- Recent activity will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Vehicle Status -->
+    <section class="py-12 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Fleet Status</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Monitor vehicle availability, driver status, and fleet performance
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6" id="vehicle-status-grid">
+                <!-- Vehicle cards will be populated here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Analytics Overview -->
+    <section class="py-12 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Performance Analytics</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Data-driven insights to optimize operations and improve patient care
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="chart-container">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">Weekly Trip Volume</h3>
+                    <div id="trip-volume-chart" style="height: 300px;"></div>
+                </div>
+
+                <div class="chart-container">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">On-Time Performance</h3>
+                    <div id="performance-chart" style="height: 300px;"></div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
+                <div class="dashboard-card text-center">
+                    <div class="relative w-24 h-24 mx-auto mb-4">
+                        <svg class="progress-ring w-24 h-24">
+                            <circle class="progress-ring-circle" cx="48" cy="48" r="40" style="stroke-dashoffset: 62.8;"></circle>
+                        </svg>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <span class="text-xl font-bold text-teal-600">75%</span>
+                        </div>
+                    </div>
+                    <h3 class="font-semibold text-gray-900">Fleet Utilization</h3>
+                    <p class="text-sm text-gray-600">Optimal vehicle usage this week</p>
+                </div>
+
+                <div class="dashboard-card text-center">
+                    <div class="relative w-24 h-24 mx-auto mb-4">
+                        <svg class="progress-ring w-24 h-24">
+                            <circle class="progress-ring-circle" cx="48" cy="48" r="40" style="stroke-dashoffset: 25.1;"></circle>
+                        </svg>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <span class="text-xl font-bold text-teal-600">90%</span>
+                        </div>
+                    </div>
+                    <h3 class="font-semibold text-gray-900">On-Time Rate</h3>
+                    <p class="text-sm text-gray-600">Excellent punctuality this month</p>
+                </div>
+
+                <div class="dashboard-card text-center">
+                    <div class="relative w-24 h-24 mx-auto mb-4">
+                        <svg class="progress-ring w-24 h-24">
+                            <circle class="progress-ring-circle" cx="48" cy="48" r="40" style="stroke-dashoffset: 12.6;"></circle>
+                        </svg>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <span class="text-xl font-bold text-teal-600">95%</span>
+                        </div>
+                    </div>
+                    <h3 class="font-semibold text-gray-900">Patient Satisfaction</h3>
+                    <p class="text-sm text-gray-600">Outstanding care quality scores</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Emergency Protocols -->
+    <section class="py-12 bg-red-50">
+        <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-red-800 mb-4">Emergency Protocols</h2>
+            <p class="text-lg text-red-700 mb-8">
+                24/7 emergency support and immediate response coordination
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button onclick="handleEmergency()" class="emergency-btn">
+                    🚨 EMERGENCY ASSISTANCE
+                </button>
+                <button onclick="contactSupport()" class="bg-red-600 text-white px-8 py-3 rounded-md font-semibold hover:bg-red-700 transition-colors">
+                    📞 Contact Support
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <div class="logo-container justify-center mb-4">
+                    <img src="HH Logo White.png" alt="Helping Hands Transportation" class="logo">
+                    <div class="brand-name text-white">
+                        Helping Hands Transportation
+                    </div>
+                </div>
+                <p class="text-gray-400 mb-4">
+                    Compassionate NEMT services with advanced technology
+                </p>
+                <p class="text-gray-500 text-sm">
+                    © 2024 Helping Hands Transportation. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="helping-hands.js"></script>
+    <script>
+        function scrollToDashboard() {
+            document.getElementById('dashboard-section').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }
+        
+        function handleEmergency() {
+            showNotification('Emergency protocols activated. Contacting support team...', 'emergency');
+        }
+        
+        function contactSupport() {
+            showNotification('Connecting to 24/7 support team...', 'info');
+        }
+        
+        function centerMap() {
+            if (window.helpingHands && window.helpingHands.map) {
+                window.helpingHands.map.setView([40.7128, -74.0060], 12);
+                showNotification('Map centered on service area', 'info');
+            }
+        }
+        
+        function refreshVehicles() {
+            if (window.helpingHands) {
+                window.helpingHands.updateVehicleStatus();
+                showNotification('Vehicle status refreshed', 'success');
+            }
+        }
+        
+        function refreshActivity() {
+            if (window.helpingHands) {
+                window.helpingHands.updateRecentActivity();
+                showNotification('Activity feed refreshed', 'success');
+            }
+        }
+        
+        function showNewTripModal() {
+            showNotification('New trip booking feature coming soon!', 'info');
+        }
+        
+        // Initialize charts when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCharts();
+        });
+        
+        function initializeCharts() {
+            if (typeof echarts === 'undefined') return;
+            
+            // Trip Volume Chart
+            const tripVolumeChart = echarts.init(document.getElementById('trip-volume-chart'));
+            const tripVolumeOption = {
+                tooltip: {
+                    trigger: 'axis',
+                    backgroundColor: '#ffffff',
+                    borderColor: '#e5e7eb',
+                    textStyle: { color: '#3D3D3D' }
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    axisLine: { lineStyle: { color: '#e5e7eb' } },
+                    axisLabel: { color: '#6B7280' }
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLine: { lineStyle: { color: '#e5e7eb' } },
+                    axisLabel: { color: '#6B7280' },
+                    splitLine: { lineStyle: { color: '#f8f9fa' } }
+                },
+                series: [{
+                    data: [45, 52, 48, 61, 58, 35, 28],
+                    type: 'bar',
+                    itemStyle: { 
+                        color: {
+                            type: 'linear',
+                            x: 0, y: 0, x2: 0, y2: 1,
+                            colorStops: [
+                                { offset: 0, color: '#2C5F5D' },
+                                { offset: 1, color: '#7BA05B' }
+                            ]
+                        }
+                    },
+                    barWidth: '60%'
+                }]
+            };
+            tripVolumeChart.setOption(tripVolumeOption);
+            
+            // Performance Chart
+            const performanceChart = echarts.init(document.getElementById('performance-chart'));
+            const performanceOption = {
+                tooltip: {
+                    trigger: 'axis',
+                    backgroundColor: '#ffffff',
+                    borderColor: '#e5e7eb',
+                    textStyle: { color: '#3D3D3D' }
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                    axisLine: { lineStyle: { color: '#e5e7eb' } },
+                    axisLabel: { color: '#6B7280' }
+                },
+                yAxis: {
+                    type: 'value',
+                    min: 80,
+                    max: 100,
+                    axisLine: { lineStyle: { color: '#e5e7eb' } },
+                    axisLabel: { color: '#6B7280' },
+                    splitLine: { lineStyle: { color: '#f8f9fa' } }
+                },
+                series: [{
+                    data: [92, 94, 90, 96],
+                    type: 'line',
+                    smooth: true,
+                    lineStyle: { color: '#2C5F5D', width: 3 },
+                    itemStyle: { color: '#2C5F5D' },
+                    areaStyle: { 
+                        color: {
+                            type: 'linear',
+                            x: 0, y: 0, x2: 0, y2: 1,
+                            colorStops: [
+                                { offset: 0, color: 'rgba(44, 95, 93, 0.3)' },
+                                { offset: 1, color: 'rgba(44, 95, 93, 0.05)' }
+                            ]
+                        }
+                    }
+                }]
+            };
+            performanceChart.setOption(performanceOption);
+            
+            // Make charts responsive
+            window.addEventListener('resize', () => {
+                tripVolumeChart.resize();
+                performanceChart.resize();
+            });
+        }
+        
+        // Add CSS custom properties
+        document.documentElement.style.setProperty('--deep-teal', '#2C5F5D');
+        document.documentElement.style.setProperty('--sage-green', '#7BA05B');
+        document.documentElement.style.setProperty('--warm-coral', '#E07A5F');
+        document.documentElement.style.setProperty('--gentle-blue', '#81A7C7');
+        document.documentElement.style.setProperty('--sunshine-yellow', '#F2CC8F');
+        document.documentElement.style.setProperty('--soft-gray', '#F8F9FA');
+        document.documentElement.style.setProperty('--charcoal', '#3D3D3D');
+    </script>
+</body>
+</html>

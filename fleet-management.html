@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fleet Management - Helping Hands Transportation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Crimson+Pro:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --deep-teal: #2C5F5D;
+            --sage-green: #7BA05B;
+            --warm-coral: #E07A5F;
+            --gentle-blue: #81A7C7;
+            --sunshine-yellow: #F2CC8F;
+            --soft-gray: #F8F9FA;
+            --charcoal: #3D3D3D;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--soft-gray);
+            color: var(--charcoal);
+        }
+        
+        .dashboard-bg {
+            background-image: url('resources/dashboard-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        
+        .dashboard-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .metric-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .metric-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--deep-teal);
+            margin-bottom: 0.5rem;
+        }
+        
+        .metric-label {
+            color: #6B7280;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            letter-spacing: 0.05em;
+        }
+        
+        .vehicle-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .vehicle-card:hover {
+            border-color: var(--deep-teal);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .driver-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .driver-card:hover {
+            border-color: var(--sage-green);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .primary-btn {
+            background: var(--deep-teal);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .primary-btn:hover {
+            background: var(--sage-green);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(44, 95, 93, 0.3);
+        }
+        
+        .secondary-btn {
+            background: white;
+            border: 2px solid var(--deep-teal);
+            color: var(--deep-teal);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .secondary-btn:hover {
+            background: var(--deep-teal);
+            color: white;
+        }
+        
+        .navigation {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo {
+            height: 40px;
+            width: auto;
+            margin-right: 12px;
+        }
+        
+        .brand-name {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--deep-teal);
+        }
+        
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-available {
+            background: var(--sage-green);
+            color: white;
+        }
+        
+        .status-en-route {
+            background: var(--gentle-blue);
+            color: white;
+        }
+        
+        .status-transporting {
+            background: var(--sunshine-yellow);
+            color: var(--charcoal);
+        }
+        
+        .status-maintenance {
+            background: #DC2626;
+            color: white;
+        }
+        
+        .status-offline {
+            background: #E5E7EB;
+            color: #6B7280;
+        }
+        
+        .maintenance-alert {
+            background: #FEF2F2;
+            border: 1px solid #FECACA;
+            color: #DC2626;
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .certification-badge {
+            background: var(--sage-green);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+        }
+        
+        .filter-dropdown {
+            background: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            color: var(--charcoal);
+        }
+        
+        .search-input {
+            background: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            color: var(--charcoal);
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--deep-teal);
+            box-shadow: 0 0 0 3px rgba(44, 95, 93, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .metric-number {
+                font-size: 2rem;
+            }
+            
+            .brand-name {
+                font-size: 1.25rem;
+            }
+            
+            .logo {
+                height: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navigation fixed w-full top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="logo-container">
+                    <img src="HH Logo White.png" alt="Helping Hands Transportation" class="logo">
+                    <div class="brand-name">
+                        Helping Hands Transportation
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="index.html" class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Dashboard</a>
+                        <a href="#" class="text-gray-900 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Fleet</a>
+                        <a href="billing-compliance.html" class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Billing</a>
+                        <a href="driver-app.html" target="_blank" class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Driver App</a>
+                        <button onclick="scheduleMaintenance()" class="primary-btn ml-4">Schedule Maintenance</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <section class="pt-24 pb-8 dashboard-bg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white bg-opacity-95 backdrop-filter backdrop-blur-lg rounded-2xl p-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-900 mb-2">Fleet Management</h1>
+                        <p class="text-gray-600">Monitor vehicles, drivers, and maintenance schedules</p>
+                    </div>
+                    <div class="mt-4 md:mt-0 flex items-center space-x-4">
+                        <select class="filter-dropdown">
+                            <option>All Vehicles</option>
+                            <option>Available</option>
+                            <option>Active</option>
+                            <option>Maintenance</option>
+                        </select>
+                        <input type="text" placeholder="Search vehicles..." class="search-input">
+                        <button onclick="exportFleetReport()" class="secondary-btn">Export Report</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fleet Overview Metrics -->
+    <section class="py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+                <div class="metric-card text-center">
+                    <div class="metric-number">25</div>
+                    <div class="metric-label">Total Vehicles</div>
+                </div>
+
+                <div class="metric-card text-center">
+                    <div class="metric-number">18</div>
+                    <div class="metric-label">Active Vehicles</div>
+                </div>
+
+                <div class="metric-card text-center">
+                    <div class="metric-number">3</div>
+                    <div class="metric-label">In Maintenance</div>
+                </div>
+
+                <div class="metric-card text-center">
+                    <div class="metric-number">94%</div>
+                    <div class="metric-label">Fleet Utilization</div>
+                </div>
+
+                <div class="metric-card text-center">
+                    <div class="metric-number">$2,450</div>
+                    <div class="metric-label">Daily Fuel Cost</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fleet Analytics -->
+    <section class="py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="chart-container">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">Fleet Utilization Trends</h3>
+                    <div id="utilization-chart" style="height: 300px;"></div>
+                </div>
+
+                <div class="chart-container">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">Maintenance Costs</h3>
+                    <div id="maintenance-chart" style="height: 300px;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Vehicle Management -->
+    <section class="py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-gray-900">Vehicle Fleet</h2>
+                <button onclick="addVehicle()" class="primary-btn">Add Vehicle</button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="vehicle-fleet-grid">
+                <!-- Vehicle cards will be populated here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Driver Management -->
+    <section class="py-8 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-gray-900">Driver Management</h2>
+                <button onclick="addDriver()" class="primary-btn">Add Driver</button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="driver-management-grid">
+                <!-- Driver cards will be populated here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Maintenance Schedule -->
+    <section class="py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="dashboard-card">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900">Maintenance Schedule</h2>
+                    <button onclick="scheduleMaintenance()" class="primary-btn">Schedule Service</button>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Upcoming Maintenance</h3>
+                        <div class="space-y-4" id="upcoming-maintenance">
+                            <!-- Maintenance items will be populated here -->
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Service History</h3>
+                        <div class="space-y-4" id="service-history">
+                            <!-- Service history items will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Compliance Tracking -->
+    <section class="py-8 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="dashboard-card">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900">Compliance Tracking</h2>
+                    <button onclick="runComplianceCheck()" class="primary-btn">Run Check</button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="text-center">
+                        <div class="relative w-24 h-24 mx-auto mb-4">
+                            <svg class="progress-ring w-24 h-24">
+                                <circle class="progress-ring-circle" cx="48" cy="48" r="40" style="stroke-dashoffset: 25.1;"></circle>
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <span class="text-xl font-bold text-teal-600">90%</span>
+                            </div>
+                        </div>
+                        <h3 class="font-semibold text-gray-900">Vehicle Compliance</h3>
+                        <p class="text-sm text-gray-600">Inspections & certifications</p>
+                    </div>
+
+                    <div class="text-center">
+                        <div class="relative w-24 h-24 mx-auto mb-4">
+                            <svg class="progress-ring w-24 h-24">
+                                <circle class="progress-ring-circle" cx="48" cy="48" r="40" style="stroke-dashoffset: 12.6;"></circle>
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <span class="text-xl font-bold text-teal-600">95%</span>
+                            </div>
+                        </div>
+                        <h3 class="font-semibold text-gray-900">Driver Compliance</h3>
+                        <p class="text-sm text-gray-600">Certifications & training</p>
+                    </div>
+
+                    <div class="text-center">
+                        <div class="relative w-24 h-24 mx-auto mb-4">
+                            <svg class="progress-ring w-24 h-24">
+                                <circle class="progress-ring-circle" cx="48" cy="48" r="40" style="stroke-dashoffset: 50.2;"></circle>
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <span class="text-xl font-bold text-teal-600">80%</span>
+                            </div>
+                        </div>
+                        <h3 class="font-semibold text-gray-900">Insurance Compliance</h3>
+                        <p class="text-sm text-gray-600">Coverage & documentation</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <div class="logo-container justify-center mb-4">
+                    <img src="HH Logo White.png" alt="Helping Hands Transportation" class="logo">
+                    <div class="brand-name text-white">
+                        Helping Hands Transportation
+                    </div>
+                </div>
+                <p class="text-gray-400 mb-4">
+                    Advanced fleet management for NEMT providers
+                </p>
+                <p class="text-gray-500 text-sm">
+                    © 2024 Helping Hands Transportation. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="helping-hands.js"></script>
+    <script>
+        // Fleet Management Specific Functions
+        function addVehicle() {
+            showNotification('Add vehicle feature coming soon!', 'info');
+        }
+
+        function addDriver() {
+            showNotification('Add driver feature coming soon!', 'info');
+        }
+
+        function scheduleMaintenance() {
+            showNotification('Maintenance scheduling feature coming soon!', 'info');
+        }
+
+        function exportFleetReport() {
+            showNotification('Fleet report export feature coming soon!', 'info');
+        }
+
+        function runComplianceCheck() {
+            showNotification('Running compliance check...', 'info');
+            setTimeout(() => {
+                showNotification('Compliance check completed successfully!', 'success');
+            }, 2000);
+        }
+
+        // Initialize fleet management specific data
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeFleetData();
+            initializeFleetCharts();
+        });
+
+        function initializeFleetData() {
+            if (!window.helpingHands) return;
+
+            // Populate vehicle fleet grid
+            const vehicleFleetGrid = document.getElementById('vehicle-fleet-grid');
+            if (vehicleFleetGrid) {
+                vehicleFleetGrid.innerHTML = '';
+                
+                const vehicles = [
+                    { id: 1, number: '101', type: 'Wheelchair Van', status: 'available', driver: 'Sarah Johnson', mileage: 45678, lastService: '2024-11-15' },
+                    { id: 2, number: '205', type: 'Standard Van', status: 'en-route', driver: 'Michael Chen', mileage: 32456, lastService: '2024-12-01' },
+                    { id: 3, number: '312', type: 'Stretcher Van', status: 'transporting', driver: 'Maria Rodriguez', mileage: 28901, lastService: '2024-11-28' },
+                    { id: 4, number: '108', type: 'Wheelchair Van', status: 'available', driver: 'James Wilson', mileage: 51234, lastService: '2024-12-10' },
+                    { id: 5, number: '217', type: 'Standard Van', status: 'maintenance', driver: 'Not Assigned', mileage: 37890, lastService: '2024-10-20' },
+                    { id: 6, number: '143', type: 'Wheelchair Van', status: 'available', driver: 'Lisa Thompson', mileage: 23456, lastService: '2024-12-05' },
+                    { id: 7, number: '256', type: 'Standard Van', status: 'offline', driver: 'Not Assigned', mileage: 44567, lastService: '2024-11-30' },
+                    { id: 8, number: '389', type: 'Stretcher Van', status: 'available', driver: 'David Brown', mileage: 30123, lastService: '2024-12-08' }
+                ];
+
+                vehicles.forEach(vehicle => {
+                    const vehicleCard = createVehicleCard(vehicle);
+                    vehicleFleetGrid.appendChild(vehicleCard);
+                });
+            }
+
+            // Populate driver management grid
+            const driverManagementGrid = document.getElementById('driver-management-grid');
+            if (driverManagementGrid) {
+                driverManagementGrid.innerHTML = '';
+                
+                const drivers = [
+                    { id: 1, name: 'Sarah Johnson', status: 'available', phone: '+1 (555) 123-4567', certifications: ['CPR', 'Wheelchair Securement', 'Patient Care'], rating: 4.9, trips: 156 },
+                    { id: 2, name: 'Michael Chen', status: 'en-route', phone: '+1 (555) 234-5678', certifications: ['CPR', 'First Aid'], rating: 4.8, trips: 134 },
+                    { id: 3, name: 'Maria Rodriguez', status: 'transporting', phone: '+1 (555) 345-6789', certifications: ['CPR', 'EMT-Basic', 'Stretcher Transport'], rating: 4.9, trips: 189 },
+                    { id: 4, name: 'James Wilson', status: 'available', phone: '+1 (555) 456-7890', certifications: ['CPR', 'Wheelchair Securement'], rating: 4.7, trips: 98 },
+                    { id: 5, name: 'Lisa Thompson', status: 'available', phone: '+1 (555) 567-8901', certifications: ['CPR', 'Patient Care'], rating: 4.8, trips: 145 },
+                    { id: 6, name: 'David Brown', status: 'available', phone: '+1 (555) 678-9012', certifications: ['CPR', 'First Aid', 'Wheelchair Securement'], rating: 4.9, trips: 167 }
+                ];
+
+                drivers.forEach(driver => {
+                    const driverCard = createDriverCard(driver);
+                    driverManagementGrid.appendChild(driverCard);
+                });
+            }
+
+            // Populate maintenance schedules
+            populateMaintenanceData();
+        }
+
+        function createVehicleCard(vehicle) {
+            const card = document.createElement('div');
+            card.className = 'vehicle-card';
+            
+            const statusColor = getStatusColor(vehicle.status);
+            const vehicleIcon = getVehicleIcon(vehicle.type);
+            
+            card.innerHTML = `
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center">
+                        <span class="text-2xl mr-3">${vehicleIcon}</span>
+                        <div>
+                            <h4 class="font-semibold text-gray-900">Vehicle ${vehicle.number}</h4>
+                            <span class="text-sm px-2 py-1 rounded-full ${statusColor}">${vehicle.status.toUpperCase()}</span>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="w-3 h-3 rounded-full ${getStatusDotColor(vehicle.status)} ml-auto"></div>
+                    </div>
+                </div>
+                
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Type:</span>
+                        <span class="font-medium text-gray-900">${vehicle.type}</span>
+                    </div>
+                    
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Driver:</span>
+                        <span class="text-teal-600">${vehicle.driver}</span>
+                    </div>
+                    
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Mileage:</span>
+                        <span class="text-gray-900">${vehicle.mileage.toLocaleString()}</span>
+                    </div>
+                    
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Last Service:</span>
+                        <span class="text-gray-900">${vehicle.lastService}</span>
+                    </div>
+                </div>
+                
+                <div class="mt-3 pt-3 border-t border-gray-100">
+                    <div class="flex space-x-2">
+                        <button onclick="viewVehicleDetails(${vehicle.id})" class="flex-1 bg-teal-600 text-white py-2 px-3 rounded text-sm hover:bg-teal-700">
+                            View Details
+                        </button>
+                        <button onclick="scheduleVehicleMaintenance(${vehicle.id})" class="flex-1 bg-gray-200 text-gray-700 py-2 px-3 rounded text-sm hover:bg-gray-300">
+                            Schedule Service
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        function createDriverCard(driver) {
+            const card = document.createElement('div');
+            card.className = 'driver-card';
+            
+            const statusColor = getStatusColor(driver.status);
+            
+            card.innerHTML = `
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center mr-3">
+                            <span class="text-xl">👤</span>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-900">${driver.name}</h4>
+                            <span class="text-sm px-2 py-1 rounded-full ${statusColor}">${driver.status.toUpperCase()}</span>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-sm text-gray-600">Rating</div>
+                        <div class="font-bold text-teal-600">${driver.rating}</div>
+                    </div>
+                </div>
+                
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Phone:</span>
+                        <span class="text-teal-600">${driver.phone}</span>
+                    </div>
+                    
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Trips:</span>
+                        <span class="text-gray-900">${driver.trips}</span>
+                    </div>
+                    
+                    <div class="pt-2">
+                        <div class="text-gray-600 mb-1">Certifications:</div>
+                        <div class="flex flex-wrap gap-1">
+                            ${driver.certifications.map(cert => 
+                                `<span class="certification-badge">${cert}</span>`
+                            ).join('')}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-3 pt-3 border-t border-gray-100">
+                    <div class="flex space-x-2">
+                        <button onclick="viewDriverDetails(${driver.id})" class="flex-1 bg-teal-600 text-white py-2 px-3 rounded text-sm hover:bg-teal-700">
+                            View Details
+                        </button>
+                        <button onclick="contactDriver(${driver.id})" class="flex-1 bg-gray-200 text-gray-700 py-2 px-3 rounded text-sm hover:bg-gray-300">
+                            Contact
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        function populateMaintenanceData() {
+            const upcomingMaintenance = document.getElementById('upcoming-maintenance');
+            const serviceHistory = document.getElementById('service-history');
+            
+            if (upcomingMaintenance) {
+                upcomingMaintenance.innerHTML = `
+                    <div class="maintenance-alert">
+                        <div class="flex items-center">
+                            <span class="text-xl mr-2">⚠️</span>
+                            <div>
+                                <div class="font-semibold">Vehicle 217 - Oil Change Due</div>
+                                <div class="text-sm">Due: Dec 25, 2024 • 3,500 miles since last service</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                        <div class="flex items-center">
+                            <span class="text-xl mr-2">🔧</span>
+                            <div>
+                                <div class="font-semibold">Vehicle 101 - Brake Inspection</div>
+                                <div class="text-sm">Scheduled: Dec 28, 2024 • Routine maintenance</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                        <div class="flex items-center">
+                            <span class="text-xl mr-2">🛞</span>
+                            <div>
+                                <div class="font-semibold">Vehicle 312 - Tire Rotation</div>
+                                <div class="text-sm">Scheduled: Dec 30, 2024 • 45,000 miles</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            if (serviceHistory) {
+                serviceHistory.innerHTML = `
+                    <div class="bg-white border border-gray-200 rounded-lg p-3">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <div class="font-semibold">Vehicle 205 - Transmission Service</div>
+                                <div class="text-sm text-gray-600">Completed: Dec 20, 2024</div>
+                            </div>
+                            <div class="text-green-600 font-semibold">✓ Complete</div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white border border-gray-200 rounded-lg p-3">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <div class="font-semibold">Vehicle 108 - Wheelchair Lift Service</div>
+                                <div class="text-sm text-gray-600">Completed: Dec 18, 2024</div>
+                            </div>
+                            <div class="text-green-600 font-semibold">✓ Complete</div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white border border-gray-200 rounded-lg p-3">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <div class="font-semibold">Vehicle 389 - HVAC System Check</div>
+                                <div class="text-sm text-gray-600">Completed: Dec 15, 2024</div>
+                            </div>
+                            <div class="text-green-600 font-semibold">✓ Complete</div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function getVehicleIcon(type) {
+            if (type.includes('Wheelchair')) return '♿';
+            if (type.includes('Stretcher')) return '🛏️';
+            return '🚐';
+        }
+
+        function getStatusColor(status) {
+            const colors = {
+                'available': 'bg-green-100 text-green-800',
+                'en-route': 'bg-blue-100 text-blue-800',
+                'transporting': 'bg-yellow-100 text-yellow-800',
+                'maintenance': 'bg-red-100 text-red-800',
+                'offline': 'bg-gray-100 text-gray-800'
+            };
+            return colors[status] || 'bg-gray-100 text-gray-800';
+        }
+
+        function getStatusDotColor(status) {
+            const colors = {
+                'available': 'bg-green-500',
+                'en-route': 'bg-blue-500',
+                'transporting': 'bg-yellow-500',
+                'maintenance': 'bg-red-500',
+                'offline': 'bg-gray-500'
+            };
+            return colors[status] || 'bg-gray-500';
+        }
+
+        function initializeFleetCharts() {
+            if (typeof echarts === 'undefined') return;
+            
+            // Utilization Chart
+            const utilizationChart = echarts.init(document.getElementById('utilization-chart'));
+            const utilizationOption = {
+                tooltip: {
+                    trigger: 'axis',
+                    backgroundColor: '#ffffff',
+                    borderColor: '#e5e7eb',
+                    textStyle: { color: '#3D3D3D' }
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    axisLine: { lineStyle: { color: '#e5e7eb' } },
+                    axisLabel: { color: '#6B7280' }
+                },
+                yAxis: {
+                    type: 'value',
+                    max: 100,
+                    axisLine: { lineStyle: { color: '#e5e7eb' } },
+                    axisLabel: { color: '#6B7280' },
+                    splitLine: { lineStyle: { color: '#f8f9fa' } }
+                },
+                series: [{
+                    data: [92, 88, 94, 90, 96, 78, 65],
+                    type: 'line',
+                    smooth: true,
+                    lineStyle: { color: '#2C5F5D', width: 3 },
+                    itemStyle: { color: '#2C5F5D' },
+                    areaStyle: { 
+                        color: {
+                            type: 'linear',
+                            x: 0, y: 0, x2: 0, y2: 1,
+                            colorStops: [
+                                { offset: 0, color: 'rgba(44, 95, 93, 0.3)' },
+                                { offset: 1, color: 'rgba(44, 95, 93, 0.05)' }
+                            ]
+                        }
+                    }
+                }]
+            };
+            utilizationChart.setOption(utilizationOption);
+            
+            // Maintenance Chart
+            const maintenanceChart = echarts.init(document.getElementById('maintenance-chart'));
+            const maintenanceOption = {
+                tooltip: {
+                    trigger: 'axis',
+                    backgroundColor: '#ffffff',
+                    borderColor: '#e5e7eb',
+                    textStyle: { color: '#3D3D3D' }
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    axisLine: { lineStyle: { color: '#e5e7eb' } },
+                    axisLabel: { color: '#6B7280' }
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLine: { lineStyle: { color: '#e5e7eb' } },
+                    axisLabel: { color: '#6B7280' },
+                    splitLine: { lineStyle: { color: '#f8f9fa' } }
+                },
+                series: [{
+                    data: [3200, 2800, 3600, 2400, 3100, 2900],
+                    type: 'bar',
+                    itemStyle: { 
+                        color: {
+                            type: 'linear',
+                            x: 0, y: 0, x2: 0, y2: 1,
+                            colorStops: [
+                                { offset: 0, color: '#7BA05B' },
+                                { offset: 1, color: '#2C5F5D' }
+                            ]
+                        }
+                    },
+                    barWidth: '60%'
+                }]
+            };
+            maintenanceChart.setOption(maintenanceOption);
+            
+            // Make charts responsive
+            window.addEventListener('resize', () => {
+                utilizationChart.resize();
+                maintenanceChart.resize();
+            });
+        }
+
+        // Global functions
+        function viewVehicleDetails(vehicleId) {
+            showNotification(`Vehicle ${vehicleId} details coming soon!`, 'info');
+        }
+
+        function scheduleVehicleMaintenance(vehicleId) {
+            showNotification(`Maintenance scheduling for vehicle ${vehicleId} coming soon!`, 'info');
+        }
+
+        function viewDriverDetails(driverId) {
+            showNotification(`Driver ${driverId} details coming soon!`, 'info');
+        }
+
+        function contactDriver(driverId) {
+            showNotification(`Contacting driver ${driverId}...`, 'info');
+        }
+
+        // Add CSS custom properties
+        document.documentElement.style.setProperty('--deep-teal', '#2C5F5D');
+        document.documentElement.style.setProperty('--sage-green', '#7BA05B');
+        document.documentElement.style.setProperty('--warm-coral', '#E07A5F');
+        document.documentElement.style.setProperty('--gentle-blue', '#81A7C7');
+        document.documentElement.style.setProperty('--sunshine-yellow', '#F2CC8F');
+        document.documentElement.style.setProperty('--soft-gray', '#F8F9FA');
+        document.documentElement.style.setProperty('--charcoal', '#3D3D3D');
+    </script>
+</body>
+</html>

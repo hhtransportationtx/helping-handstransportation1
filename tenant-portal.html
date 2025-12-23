@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenant Portal - Helping Hands SaaS Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Crimson+Pro:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --deep-teal: #2C5F5D;
+            --sage-green: #7BA05B;
+            --warm-coral: #E07A5F;
+            --gentle-blue: #81A7C7;
+            --sunshine-yellow: #F2CC8F;
+            --soft-gray: #F8F9FA;
+            --charcoal: #3D3D3D;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--soft-gray);
+            color: var(--charcoal);
+        }
+        
+        .dashboard-bg {
+            background-image: url('resources/dashboard-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        
+        .dashboard-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .metric-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .metric-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--deep-teal);
+            margin-bottom: 0.5rem;
+        }
+        
+        .metric-label {
+            color: #6B7280;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            letter-spacing: 0.05em;
+        }
+        
+        .tenant-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .tenant-card:hover {
+            border-color: var(--deep-teal);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .plan-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .plan-starter {
+            background: var(--gentle-blue);
+            color: white;
+        }
+        
+        .plan-professional {
+            background: var(--sage-green);
+            color: white;
+        }
+        
+        .plan-enterprise {
+            background: var(--deep-teal);
+            color: white;
+        }
+        
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-active {
+            background: var(--sage-green);
+            color: white;
+        }
+        
+        .status-trial {
+            background: var(--sunshine-yellow);
+            color: var(--charcoal);
+        }
+        
+        .status-suspended {
+            background: #DC2626;
+            color: white;
+        }
+        
+        .primary-btn {
+            background: var(--deep-teal);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .primary-btn:hover {
+            background: var(--sage-green);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(44, 95, 93, 0.3);
+        }
+        
+        .secondary-btn {
+            background: white;
+            border: 2px solid var(--deep-teal);
+            color: var(--deep-teal);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .secondary-btn:hover {
+            background: var(--deep-teal);
+            color: white;
+        }
+        
+        .navigation {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo {
+            height: 40px;
+            width: auto;
+            margin-right: 12px;
+        }
+        
+        .brand-name {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--deep-teal);
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+        }
+        
+        .onboarding-step {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #E5E7EB;
+        }
+        
+        .onboarding-step.completed {
+            border-left-color: var(--sage-green);
+            background: #F0FDF4;
+        }
+        
+        .onboarding-step.active {
+            border-left-color: var(--deep-teal);
+            background: #F0F9FF;
+        }
+        
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #E5E7EB;
+            color: #6B7280;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 1rem;
+        }
+        
+        .step-number.completed {
+            background: var(--sage-green);
+            color: white;
+        }
+        
+        .step-number.active {
+            background: var(--deep-teal);
+            color: white;
+        }
+        
+        .white-label-preview {
+            background: white;
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .metric-number {
+                font-size: 2rem;
+            }
+            
+            .brand-name {
+                font-size: 1.25rem;
+            }
+            
+            .logo {
+                height: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navigation fixed w-full top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="logo-container">
+                    <img src="HH Logo White.png" alt="Helping Hands SaaS" class="logo">
+                    <div class="brand-name">
+                        Helping Hands SaaS Platform
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#" class="text-gray-900 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Dashboard</a>
+                        <a href="#" class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Tenants</a>
+                        <a href="#" class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Analytics</a>
+                        <a href="#" class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Billing</a>
+                        <button onclick="addNewTenant()" class="primary-btn ml-4">Add Tenant</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <section class="pt-24 pb-8 dashboard-bg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white bg-opacity-95 backdrop-filter backdrop-blur-lg rounded-2xl p-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-900 mb-2">SaaS Tenant Management</h1>
+                        <p class="text-gray-600">Manage transportation companies using our white-label platform</p>
+                    </div>
+                    <div class="mt-4 md:mt-0 flex items-center space-x-4">
+                        <select class="filter-dropdown">
+                            <option>All Plans</option>
+                            <option>Starter</option>
+                            <option>Professional</option>
+                            <option>Enterprise</option>
+                        </select>
+                        <select class="filter-dropdown">
+                            <option>All Status</option>
+                            <option>Active</option>
+                            <option>Trial</option>
+                            <option>Suspended</option>
+                        </select>
+                        <button onclick="exportTenantReport()" class="secondary-btn">Export Report</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SaaS Metrics -->
+    <section class="py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+                <div class="metric-card text-center">
+                    <div class="metric-number">12</div>
+                    <div class="metric-label">Active Tenants</div>
+                </div>
+
+                <div class="metric-card text-center">
+                    <div class="metric-number">156</div>
+                    <div class="metric-label">Total Vehicles</div>
+                </div>
+
+                <div class="metric-card text-center">
+                    <div class="metric-number">$78K</div>
+                    <div class="metric-label">Monthly Revenue</div>
+                </div>
+
+                <div class="metric-card text-center">
+                    <div class="metric-number">94%</div>
+                    <div class="metric-label">Retention Rate</div>
+                </div>
+
+                <div class="metric-card text-center">
+                    <div class="metric-number">4.8/5</div>
+                    <div class="metric-label">Tenant Satisfaction</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Revenue Analytics -->
+    <section class="py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="chart-container">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">Monthly Recurring Revenue</h3>
+                    <div id="mrr-chart" style="height: 300px;"></div>
+                </div>
+
+                <div class="chart-container">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">Tenant Growth</h3>
+                    <div id="tenant-growth-chart" style="height: 300px;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tenant Management -->
+    <section class="py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-gray-900">Transportation Companies</h2>
+                <button onclick="addNewTenant()" class="primary-btn">Add New Company</button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="tenant-grid">
+                <!-- Tenant cards will be populated here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- White-Label Customization -->
+    <section class="py-8 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="dashboard-card">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900">White-Label Customization</h2>
+                    <button onclick="previewCustomization()" class="primary-btn">Preview Changes</button>
+                </div>
+
+                <div class="white-label-preview">
+                    <div class="flex items-center justify-center mb-4">
+                        <div class="w-16 h-16 bg-teal-600 rounded-full flex items-center justify-center mr-4">
+                            <span class="text-2xl text-white">🏥</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-900">MediCare Transport</h3>
+                            <p class="text-gray-600">Your Trusted Medical Transportation Partner</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">This is how your branded platform will appear to your customers</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Brand Customization</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Company Name</label>
+                                <input type="text" placeholder="Enter company name" class="w-full p-3 border border-gray-300 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Primary Color</label>
+                                <input type="color" value="#2C5F5D" class="w-full h-12 border border-gray-300 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Logo Upload</label>
+                                <input type="file" accept="image/*" class="w-full p-3 border border-gray-300 rounded-lg">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Feature Configuration</h3>
+                        <div class="space-y-3">
+                            <label class="flex items-center">
+                                <input type="checkbox" checked class="mr-3">
+                                <span class="text-sm">AI Route Optimization</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" checked class="mr-3">
+                                <span class="text-sm">Walkie Talkie Communication</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" checked class="mr-3">
+                                <span class="text-sm">SMS Notifications</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-3">
+                                <span class="text-sm">Advanced Analytics</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-3">
+                                <span class="text-sm">Custom Integrations</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Onboarding Workflow -->
+    <section class="py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="dashboard-card">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900">Automated Onboarding</h2>
+                    <button onclick="startOnboarding()" class="primary-btn">Start Onboarding</button>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="onboarding-step completed">
+                        <div class="step-number completed">1</div>
+                        <div class="flex-1">
+                            <div class="font-semibold">Account Setup</div>
+                            <div class="text-sm text-gray-600">Company information and billing details</div>
+                        </div>
+                        <span class="text-green-600 text-xl">✅</span>
+                    </div>
+
+                    <div class="onboarding-step completed">
+                        <div class="step-number completed">2</div>
+                        <div class="flex-1">
+                            <div class="font-semibold">Brand Customization</div>
+                            <div class="text-sm text-gray-600">Logo, colors, and company branding</div>
+                        </div>
+                        <span class="text-green-600 text-xl">✅</span>
+                    </div>
+
+                    <div class="onboarding-step active">
+                        <div class="step-number active">3</div>
+                        <div class="flex-1">
+                            <div class="font-semibold">Fleet Configuration</div>
+                            <div class="text-sm text-gray-600">Vehicle setup and driver onboarding</div>
+                        </div>
+                        <span class="text-blue-600 text-xl">⏳</span>
+                    </div>
+
+                    <div class="onboarding-step">
+                        <div class="step-number">4</div>
+                        <div class="flex-1">
+                            <div class="font-semibold">Training & Go-Live</div>
+                            <div class="text-sm text-gray-600">Staff training and platform launch</div>
+                        </div>
+                        <span class="text-gray-400 text-xl">⏸️</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Subscription Management -->
+    <section class="py-8 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="dashboard-card">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900">Subscription Management</h2>
+                    <button onclick="manageBilling()" class="primary-btn">Billing Dashboard</button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="text-center p-6 bg-teal-50 rounded-lg">
+                        <div class="text-2xl font-bold text-teal-600 mb-2">$299</div>
+                        <div class="text-sm text-gray-600 mb-2">Starter Plan</div>
+                        <div class="text-xs text-gray-500">per vehicle/month</div>
+                    </div>
+
+                    <div class="text-center p-6 bg-green-50 rounded-lg">
+                        <div class="text-2xl font-bold text-green-600 mb-2">$499</div>
+                        <div class="text-sm text-gray-600 mb-2">Professional Plan</div>
+                        <div class="text-xs text-gray-500">per vehicle/month</div>
+                    </div>
+
+                    <div class="text-center p-6 bg-blue-50 rounded-lg">
+                        <div class="text-2xl font-bold text-blue-600 mb-2">$799</div>
+                        <div class="text-sm text-gray-600 mb-2">Enterprise Plan</div>
+                        <div class="text-xs text-gray-500">per vehicle/month</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <div class="logo-container justify-center mb-4">
+                    <img src="HH Logo White.png" alt="Helping Hands SaaS" class="logo">
+                    <div class="brand-name text-white">
+                        Helping Hands SaaS Platform
+                    </div>
+                </div>
+                <p class="text-gray-400 mb-4">
+                    White-label NEMT software for transportation companies
+                </p>
+                <p class="text-gray-500 text-sm">
+                    © 2024 Helping Hands SaaS Platform. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="helping-hands.js"></script>
+    <script>
+        // Tenant Management Functions
+        function addNewTenant() {
+            showNotification('Opening new tenant registration form...', 'info');
+            // In a real system, this would open a comprehensive onboarding wizard
+        }
+
+        function exportTenantReport() {
+            showNotification('Exporting tenant analytics report...', 'info');
+            setTimeout(() => {
+                showNotification('Tenant report exported successfully!', 'success');
+            }, 2000);
+        }
+
+        function previewCustomization() {
+            showNotification('Loading white-label preview...', 'info');
+            // This would show a live preview of the customized platform
+        }
+
+        function startOnboarding() {
+            showNotification('Starting automated onboarding workflow...', 'info');
+            // This would trigger the complete onboarding sequence
+        }
+
+        function manageBilling() {
+            showNotification('Opening subscription billing dashboard...', 'info');
+            // This would navigate to the billing management interface
+        }
+
+        // Initialize tenant data
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTenantData();
+            initializeTenantCharts();
+        });
+
+        function initializeTenantData() {
+            const tenantGrid = document.getElementById('tenant-grid');
+            if (tenantGrid) {
+                tenantGrid.innerHTML = '';
+                
+                const tenants = [
+                    { 
+                        id: 1, 
+                        name: 'MediCare Transport', 
+                        plan: 'Professional', 
+                        status: 'active', 
+                        vehicles: 12, 
+                        revenue: 5988, 
+                        since: '2024-01-15',
+                        logo: '🏥',
+                        color: '#2563EB'
+                    },
+                    { 
+                        id: 2, 
+                        name: 'Comfort Care Transport', 
+                        plan: 'Enterprise', 
+                        status: 'active', 
+                        vehicles: 28, 
+                        revenue: 22372, 
+                        since: '2024-02-01',
+                        logo: '💙',
+                        color: '#7C3AED'
+                    },
+                    { 
+                        id: 3, 
+                        name: 'SafeRide Medical', 
+                        plan: 'Starter', 
+                        status: 'trial', 
+                        vehicles: 5, 
+                        revenue: 1495, 
+                        since: '2024-12-01',
+                        logo: '🚐',
+                        color: '#059669'
+                    },
+                    { 
+                        id: 4, 
+                        name: 'Elite Medical Transport', 
+                        plan: 'Professional', 
+                        status: 'active', 
+                        vehicles: 18, 
+                        revenue: 8982, 
+                        since: '2024-03-15',
+                        logo: '⭐',
+                        color: '#DC2626'
+                    },
+                    { 
+                        id: 5, 
+                        name: 'Community Transport Solutions', 
+                        plan: 'Enterprise', 
+                        status: 'active', 
+                        vehicles: 35, 
+                        revenue: 27965, 
+                        since: '2024-01-30',
+                        logo: '🤝',
+                        color: '#7BA05B'
+                    },
+                    { 
+                        id: 6, 
+                        name: 'Premier Medical Transport', 
+                        plan: 'Professional', 
+                        status: 'trial', 
+                        vehicles: 8, 
+                        revenue: 3992, 
+                        since: '2024-11-15',
+                        logo: '👑',
+                        color: '#F59E0B'
+                    }
+                ];
+
+                tenants.forEach(tenant => {
+                    const tenantCard = createTenantCard(tenant);
+                    tenantGrid.appendChild(tenantCard);
+                });
+            }
+        }
+
+        function createTenantCard(tenant) {
+            const card = document.createElement('div');
+            card.className = 'tenant-card';
+            
+            const planColor = getPlanColor(tenant.plan);
+            const statusColor = getStatusColor(tenant.status);
+            
+            card.innerHTML = `
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 rounded-full flex items-center justify-center mr-3 text-2xl" style="background-color: ${tenant.color}20; color: ${tenant.color};">
+                            ${tenant.logo}
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-900">${tenant.name}</h4>
+                            <span class="text-sm px-2 py-1 rounded-full ${planColor}">${tenant.plan}</span>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-sm px-2 py-1 rounded-full ${statusColor}">${tenant.status.toUpperCase()}</span>
+                    </div>
+                </div>
+                
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Vehicles:</span>
+                        <span class="font-medium text-gray-900">${tenant.vehicles}</span>
+                    </div>
+                    
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Monthly Revenue:</span>
+                        <span class="font-medium text-teal-600">$${tenant.revenue.toLocaleString()}</span>
+                    </div>
+                    
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Since:</span>
+                        <span class="text-gray-900">${tenant.since}</span>
+                    </div>
+                </div>
+                
+                <div class="mt-3 pt-3 border-t border-gray-100">
+                    <div class="flex space-x-2">
+                        <button onclick="manageTenant(${tenant.id})" class="flex-1 bg-teal-600 text-white py-2 px-3 rounded text-sm hover:bg-teal-700">
+                            Manage
+                        </button>
+                        <button onclick="impersonateTenant(${tenant.id})" class="flex-1 bg-gray-200 text-gray-700 py-2 px-3 rounded text-sm hover:bg-gray-300">
+                            View as Tenant
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        function getPlanColor(plan) {
+            const colors = {
+                'Starter': 'plan-starter',
+                'Professional': 'plan-professional',
+                'Enterprise': 'plan-enterprise'
+            };
+            return colors[plan] || 'plan-starter';
+        }
+
+        function getStatusColor(status) {
+            const colors = {
+                'active': 'status-active',
+                'trial': 'status-trial',
+                'suspended': 'status-suspended'
+            };
+            return colors[status] || 'status-active';
+        }
+
+        function initializeTenantCharts() {
+            if (typeof echarts === 'undefined') return;
+            
+            // MRR Chart
+            const mrrChart = echarts.init(document.getElementById('mrr-chart'));
+            const mrrOption = {
+                tooltip: {
+                    trigger: 'axis',
+                    backgroundColor: '#ffffff',
+                    borderColor: '#e5e7eb',
+                    textStyle: { color: '#3D3D3D' }
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    axisLine: { lineStyle: { color: '#e5e7eb' } },
+                    axisLabel: { color: '#6B7280' }
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLine: { lineStyle: { color: '#e5e7eb' } },
+                    axisLabel: { color: '#6B7280' },
+                    splitLine: { lineStyle: { color: '#f8f9fa' } }
+                },
+                series: [{
+                    data: [12000, 18500, 28000, 42000, 58000, 67000, 72000, 76000, 78000, 78000, 78000, 78000],
+                    type: 'line',
+                    smooth: true,
+                    lineStyle: { color: '#2C5F5D', width: 3 },
+                    itemStyle: { color: '#2C5F5D' },
+                    areaStyle: { 
+                        color: {
+                            type: 'linear',
+                            x: 0, y: 0, x2: 0, y2: 1,
+                            colorStops: [
+                                { offset: 0, color: 'rgba(44, 95, 93, 0.3)' },
+                                { offset: 1, color: 'rgba(44, 95, 93, 0.05)' }
+                            ]
+                        }
+                    }
+                }]
+            };
+            mrrChart.setOption(mrrOption);
+            
+            // Tenant Growth Chart
+            const tenantGrowthChart = echarts.init(document.getElementById('tenant-growth-chart'));
+            const tenantGrowthOption = {
+                tooltip: {
+                    trigger: 'axis',
+                    backgroundColor: '#ffffff',
+                    borderColor: '#e5e7eb',
+                    textStyle: { color: '#3D3D3D' }
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    axisLine: { lineStyle: { color: '#e5e7eb' } },
+                    axisLabel: { color: '#6B7280' }
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLine: { lineStyle: { color: '#e5e7eb' } },
+                    axisLabel: { color: '#6B7280' },
+                    splitLine: { lineStyle: { color: '#f8f9fa' } }
+                },
+                series: [{
+                    data: [1, 2, 3, 5, 7, 9, 10, 11, 12, 12, 12, 12],
+                    type: 'bar',
+                    itemStyle: { 
+                        color: {
+                            type: 'linear',
+                            x: 0, y: 0, x2: 0, y2: 1,
+                            colorStops: [
+                                { offset: 0, color: '#7BA05B' },
+                                { offset: 1, color: '#2C5F5D' }
+                            ]
+                        }
+                    },
+                    barWidth: '60%'
+                }]
+            };
+            tenantGrowthChart.setOption(tenantGrowthOption);
+            
+            // Make charts responsive
+            window.addEventListener('resize', () => {
+                mrrChart.resize();
+                tenantGrowthChart.resize();
+            });
+        }
+
+        // Global functions
+        function manageTenant(tenantId) {
+            showNotification(`Opening management dashboard for tenant ${tenantId}...`, 'info');
+            // This would navigate to the detailed tenant management interface
+        }
+
+        function impersonateTenant(tenantId) {
+            showNotification(`Switching to tenant ${tenantId} view...`, 'info');
+            // This would switch to the tenant's branded view of the platform
+        }
+
+        // Add CSS custom properties
+        document.documentElement.style.setProperty('--deep-teal', '#2C5F5D');
+        document.documentElement.style.setProperty('--sage-green', '#7BA05B');
+        document.documentElement.style.setProperty('--warm-coral', '#E07A5F');
+        document.documentElement.style.setProperty('--gentle-blue', '#81A7C7');
+        document.documentElement.style.setProperty('--sunshine-yellow', '#F2CC8F');
+        document.documentElement.style.setProperty('--soft-gray', '#F8F9FA');
+        document.documentElement.style.setProperty('--charcoal', '#3D3D3D');
+    </script>
+</body>
+</html>
