@@ -1028,9 +1028,7 @@ renderTrips();
   form.addEventListener("submit", function (e) {
   e.preventDefault();
 
-  let trips = JSON.parse(localStorage.getItem("trips")) || [];
-
-  const trip = {
+   const trip = {
     member: document.getElementById("memberName").value,
     pickup: document.getElementById("pickupAddress").value,
     dropoff: document.getElementById("dropoffAddress").value,
