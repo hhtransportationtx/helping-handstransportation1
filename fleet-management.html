@@ -288,7 +288,26 @@
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
   <div class="bg-white rounded-lg shadow p-6">
     <h2 class="text-xl font-semibold mb-4">Create New Trip</h2>
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+  <div class="bg-white rounded-lg shadow p-6">
+    <h2 class="text-xl font-semibold mb-4">Active Trips</h2>
 
+    <table class="w-full border text-sm">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="p-2 border">Member</th>
+          <th class="p-2 border">Pickup</th>
+          <th class="p-2 border">Dropoff</th>
+          <th class="p-2 border">Date</th>
+          <th class="p-2 border">Time</th>
+          <th class="p-2 border">Mobility</th>
+          <th class="p-2 border">Status</th>
+        </tr>
+      </thead>
+      <tbody id="tripsTable"></tbody>
+    </table>
+  </div>
+</section>
     <form id="createTripForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <input class="border p-2 rounded" placeholder="Member Name" id="memberName" required>
       <input class="border p-2 rounded" placeholder="Pickup Address" id="pickupAddress" required>
