@@ -1003,7 +1003,7 @@
 </section> 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-renderTrips();
+
     
   let trips = 
   JSON.parse(localStorage.getItem("trips")) || [];
@@ -1042,6 +1042,9 @@ renderTrips();
   localStorage.setItem("trips",
 JSON.stringify(trips));
 
-  renderTrips();
-  form.reset();
+     
+renderTrips();
+form.reset();
 });
+});
+    </script>
