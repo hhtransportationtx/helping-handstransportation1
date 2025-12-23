@@ -1009,7 +1009,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function renderTrips() {
     table.innerHTML = "";
-    trips.forEach((trip, index) => {
+    trips.forEach((trip) => {
       table.innerHTML += `
         <tr>
           <td class="border p-2">${trip.member}</td>
@@ -1023,60 +1023,29 @@ document.addEventListener("DOMContentLoaded", function () {
       `;
     });
   }
-form.addEventListener("submit", function (e) {
-e.preventDefault();
- const trip = {
- member: document.getElementById("memberName").value,
- pickup: document.getElementById("pickupAddress").value,
- dropoff: document.getElementById("dropoffAddress").value,
- date: document.getElementById("pickupDate").value,
- time: document.getElementById("pickupTime").value,
- mobility: document.getElementById("mobilityType").value,
-status: "Scheduled"
- };
 
-1039 trips.push(trip);
-1040 renderTrips();
-1041 form.reset();
-1042 });
-    trips.forEach((trip, index) => {
-      table.innerHTML += `
-        <tr>
-          <td class="p-2 border">${trip.member}</td>
-          <td class="p-2 border">${trip.pickup}</td>
-          <td class="p-2 border">${trip.dropoff}</td>
-          <td class="p-2 border">${trip.date}</td>
-    trips.forEach((trip, index) => {
-      table.innerHTML += `
-        <tr>
-          <td class="p-2 border">${trip.member}</td>
-          <td class="p-2 border">${trip.pickup}</td>
-          <td class="p-2 border">${trip.dropoff}</td>
-          <td class="p-2 border">${trip.date}</td>
-          <td class="p-2 border">${trip.time}</td>
-          <td class="p-2 border">${trip.mobility}</td>
-          <td class="p-2 border font-semibold">${trip.status}</td>
-          <td class="p-2 border">
-            <button onclick="updateStatus(${index}, 'In Progress')" class="text-blue-600 mr-2">Start</button>
-            <button onclick="updateStatus(${index}, 'Completed')" class="text-green-600 mr-2">Complete</button>
-            <button onclick="updateStatus(${index}, 'Cancelled')" class="text-red-600">Cancel</button>
-          </td>
-        </tr>
-      `;
-    });
-  }
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
 
-  function updateStatus(index, newStatus) {
-    trips[index].status = newStatus;
+    const trip = {
+      member: document.getElementById("memberName").value,
+      pickup: document.getElementById("pickupAddress").value,
+      dropoff: document.getElementById("dropoffAddress").value,
+      date: document.getElementById("pickupDate").value,
+      time: document.getElementById("pickupTime").value,
+      mobility: document.getElementById("mobilityType").value,
+      status: "Scheduled"
+    };
+
+    trips.push(trip);
     renderTrips();
-  }
-</script>
-  function updateStatus(index, newStatus) {
-    trips[index].status = newStatus;
-    renderTrips();
-  }
+    form.reset();
+  });
+
+});
 </script>
 
+</script> ← closes script
 
 
 </body>
