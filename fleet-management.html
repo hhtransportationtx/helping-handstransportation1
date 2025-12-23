@@ -1003,7 +1003,7 @@
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
-  const trips = [];
+  let trips = JSON.parse(localStorage.getItem("trips")) || [];
   const form = document.getElementById("createTripForm");
   const table = document.getElementById("tripsTable");
 
@@ -1027,7 +1027,7 @@ document.addEventListener("DOMContentLoaded", function () {
   form.addEventListener("submit", function (e) {
     e.preventDefault();
 
-    const trip = {
+    let trips = JSON.parse(localStorage.getItem("trips")) || [];
       member: document.getElementById("memberName").value,
       pickup: document.getElementById("pickupAddress").value,
       dropoff: document.getElementById("dropoffAddress").value,
