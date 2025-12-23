@@ -1011,20 +1011,19 @@ renderTrips();
   const table = document.getElementById("tripsTable");
 
   function renderTrips() {
-    table.innerHTML = "";
-    trips.forEach((trip) => {
-      table.innerHTML += `
-        <tr>
-          <td class="border p-2">${trip.member}</td>
-          <td class="border p-2">${trip.pickup}</td>
-          <td class="border p-2">${trip.dropoff}</td>
-          <td class="border p-2">${trip.date}</td>
-          <td class="border p-2">${trip.time}</td>
-          <td class="border p-2">${trip.mobility}</td>
-          <td class="border p-2 font-semibold">${trip.status}</td>
-        </tr>
-      });
-  }
+    table.innerHTML += `
+<tr>
+  <td class="border p-2">${trip.pickup}</td>
+  <td class="border p-2">${trip.dropoff}</td>
+  <td class="border p-2">${trip.date}</td>
+  <td class="border p-2">${trip.time}</td>
+  <td class="border p-2">${trip.mobility}</td>
+  <td class="border p-2 font-semibold">${trip.status}</td>
+</tr>
+`;
+});
+
+  
 
   form.addEventListener("submit", function (e) {
   e.preventDefault();
