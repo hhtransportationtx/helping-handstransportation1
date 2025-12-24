@@ -563,11 +563,27 @@ let trips = JSON.parse(localStorage.getItem("trips")) || [];
 document.addEventListener('DOMContentLoaded', function () {
 
   // LOAD trips
-  window.trips = JSON.parse(localStorage.getItem("trips")) || [];
-
+  
   const form = document.getElementById("createTripForm");
   const table = document.getElementById("tripsTable");
+form.addEventListener("submit", function (e) {
+  e.preventDefault();
 
+  const trip = {
+    pickup: form.elements[0].value,
+    dropoff: form.elements[1].value,
+    date: form.elements[2].value,
+    time: form.elements[3].value,
+    mobility: form.elements[4].value,
+    status: "Scheduled"
+  };
+
+  trips.push(trip);
+  localStorage.setItem("trips", JSON.stringify(trips));
+
+  renderTrips();
+  form.reset();
+});
   if (!form) {
     console.error("❌ createTripForm not found");
     return;
