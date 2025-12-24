@@ -557,76 +557,60 @@
             }, 2000);
         }
 
-       // Initialize fleet management specific data
-let trips = JSON.parse(localStorage.getItem("trips")) || [];
+ </section> <!-- end of page content -->
 
-document.addEventListener('DOMContentLoaded', function () {
+<script>
+  let trips = JSON.parse(localStorage.getItem("trips")) || [];
 
-  // LOAD trips
-  
-  const form = document.getElementById("createTripForm");
-  const table = document.getElementById("tripsTable");
-form.addEventListener("submit", function (e) {
-  e.preventDefault();
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("createTripForm");
+    const table = document.getElementById("tripsTable");
 
-  const trip = {
-    pickup: form.elements[0].value,
-    dropoff: form.elements[1].value,
-    date: form.elements[2].value,
-    time: form.elements[3].value,
-    mobility: form.elements[4].value,
-    status: "Scheduled"
-  };
+    if (!form || !table) {
+      console.error("❌ createTripForm or tripsTable not found");
+      return;
+    }
 
-  trips.push(trip);
-  localStorage.setItem("trips", JSON.stringify(trips));
+    function renderTrips() {
+      table.innerHTML = "";
+      trips.forEach(trip => {
+        table.innerHTML += `
+          <tr>
+            <td class="border p-2">${trip.pickup}</td>
+            <td class="border p-2">${trip.dropoff}</td>
+            <td class="border p-2">${trip.date}</td>
+            <td class="border p-2">${trip.time}</td>
+            <td class="border p-2">${trip.mobility}</td>
+            <td class="border p-2 font-semibold">${trip.status}</td>
+          </tr>
+        `;
+      });
+    }
 
-  renderTrips();
-  form.reset();
-});
-  if (!form) {
-    console.error("❌ createTripForm not found");
-    return;
-  }
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
 
-  function renderTrips() {
-    table.innerHTML = "";
-    trips.forEach(trip => {
-      able.innerHTML += `
-  <tr>
-    <td class="border p-2">${trip.member}</td>
-    <td class="border p-2">${trip.pickup}</td>
-    <td class="border p-2">${trip.dropoff}</td>
-    <td class="border p-2">${trip.date}</td>
-    <td class="border p-2">${trip.time}</td>
-    <td class="border p-2">${trip.mobility}</td>
-    <td class="border p-2 font-semibold">${trip.status}</td>
-  </tr>
+      const trip = {
+        pickup: form.querySelector('[name="pickup"]').value,
+        dropoff: form.querySelector('[name="dropoff"]').value,
+        date: form.querySelector('[name="date"]').value,
+        time: form.querySelector('[name="time"]').value,
+        mobility: form.querySelector('[name="mobility"]').value,
+        status: "Scheduled"
+      };
+
+      trips.push(trip);
+      localStorage.setItem("trips", JSON.stringify(trips));
+      renderTrips();
+      form.reset();
     });
-  }
-
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-
-    const trip = {
-      member: document.getElementById("memberName").value,
-      pickup: document.getElementById("pickupAddress").value,
-      dropoff: document.getElementById("dropoffAddress").value,
-      date: document.getElementById("pickupDate").value,
-      time: document.getElementById("pickupTime").value,
-      mobility: document.getElementById("mobilityType").value,
-      status: "Scheduled"
-    };
-
-    trips.push(trip);
-    localStorage.setItem("trips", JSON.stringify(trips));
 
     renderTrips();
-    form.reset();
   });
+</script>
 
-  renderTrips();
-});
+</body>
+</html>
 
 
         function initializeFleetData() {
