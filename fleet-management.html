@@ -557,12 +557,14 @@
             }, 2000);
         }
 
-        // Initialize fleet management specific data
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeFleetData();
-            initializeFleetCharts();
-        renderTrips();
-            });
+       // Initialize fleet management specific data
+let trips = JSON.parse(localStorage.getItem("trips")) || [];
+
+document.addEventListener('DOMContentLoaded', function() {
+  initializeFleetData();
+  initializeFleetCharts();
+  renderTrips();
+});
 
         function initializeFleetData() {
             if (!window.helpingHands) return;
