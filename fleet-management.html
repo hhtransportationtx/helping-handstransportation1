@@ -277,7 +277,7 @@
                         <a href="#" class="text-gray-900 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Fleet</a>
                         <a href="billing-compliance.html" class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Billing</a>
                         <a href="driver-app.html" target="_blank" class="text-gray-700 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Driver App</a>
-                        <button onclick="scheduleMaintenance()" class="primary-btn ml-4">Schedule Maintenance</button>
+                        <button="scheduleMaintenance()" class="primary-btn ml-4">Schedule Maintenance</button>
                     </div>
                 </div>
             </div>
@@ -560,54 +560,57 @@
  </section> <!-- end of page content -->
 
 <script>
-  let trips = JSON.parse(localStorage.getItem("trips")) || [];
+  <script>
+let trips = JSON.parse(localStorage.getItem("trips")) || [];
 
-  document.addEventListener("DOMContentLoaded", function () {
-    const form = document.getElementById("createTripForm");
-    const table = document.getElementById("tripsTable");
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("createTripForm");
+  const table = document.getElementById("tripsTable");
 
-    if (!form || !table) {
-      console.error("❌ createTripForm or tripsTable not found");
-      return;
-    }
+  if (!form || !table) {
+    console.error("❌ createTripForm or tripsTable not found");
+    return;
+  }
 
-    function renderTrips() {
-      table.innerHTML = "";
-      trips.forEach(trip => {
-        table.innerHTML += `
-          <tr>
-            <td class="border p-2">${trip.pickup}</td>
-            <td class="border p-2">${trip.dropoff}</td>
-            <td class="border p-2">${trip.date}</td>
-            <td class="border p-2">${trip.time}</td>
-            <td class="border p-2">${trip.mobility}</td>
-            <td class="border p-2 font-semibold">${trip.status}</td>
-          </tr>
-        `;
-      });
-    }
-
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-
-      const trip = {
-        pickup: form.querySelector('[name="pickup"]').value,
-        dropoff: form.querySelector('[name="dropoff"]').value,
-        date: form.querySelector('[name="date"]').value,
-        time: form.querySelector('[name="time"]').value,
-        mobility: form.querySelector('[name="mobility"]').value,
-        status: "Scheduled"
-      };
-
-      trips.push(trip);
-      localStorage.setItem("trips", JSON.stringify(trips));
-      renderTrips();
-      form.reset();
+  function renderTrips() {
+    table.innerHTML = "";
+    trips.forEach(trip => {
+      table.innerHTML += `
+        <tr>
+          <td class="border p-2">${trip.pickup}</td>
+          <td class="border p-2">${trip.dropoff}</td>
+          <td class="border p-2">${trip.date}</td>
+          <td class="border p-2">${trip.time}</td>
+          <td class="border p-2">${trip.mobility}</td>
+          <td class="border p-2 font-semibold">${trip.status}</td>
+        </tr>
+      `;
     });
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const trip = {
+      pickup: form.querySelector('[name="pickup"]').value,
+      dropoff: form.querySelector('[name="dropoff"]').value,
+      date: form.querySelector('[name="date"]').value,
+      time: form.querySelector('[name="time"]').value,
+      mobility: form.querySelector('[name="mobility"]').value,
+      status: "Scheduled"
+    };
+
+    trips.push(trip);
+    localStorage.setItem("trips", JSON.stringify(trips));
 
     renderTrips();
+    form.reset();
   });
+
+  renderTrips();
+});
 </script>
+
 
 </body>
 </html>
@@ -1051,53 +1054,5 @@
   </div>
 </section> 
 <script>
-let trips = JSON.parse(localStorage.getItem("trips")) || [];
-
-document.addEventListener("DOMContentLoaded", function () {
-  const form = document.getElementById("createTripForm");
-  const table = document.getElementById("tripsTable");
-
-  if (!form || !table) {
-    console.error("❌ createTripForm or tripsTable not found");
-    return;
-  }
-
-  function renderTrips() {
-    table.innerHTML = "";
-    trips.forEach(trip => {
-      table.innerHTML += `
-        <tr>
-          <td class="border p-2">${trip.pickup}</td>
-          <td class="border p-2">${trip.dropoff}</td>
-          <td class="border p-2">${trip.date}</td>
-          <td class="border p-2">${trip.time}</td>
-          <td class="border p-2">${trip.mobility}</td>
-          <td class="border p-2 font-semibold">${trip.status}</td>
-        </tr>
-      `;
-    });
-  }
-
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-
-    const trip = {
-      pickup: form.querySelector('[name="pickup"]').value,
-      dropoff: form.querySelector('[name="dropoff"]').value,
-      date: form.querySelector('[name="date"]').value,
-      time: form.querySelector('[name="time"]').value,
-      mobility: form.querySelector('[name="mobility"]').value,
-      status: "Scheduled"
-    };
-
-    trips.push(trip);
-    localStorage.setItem("trips", JSON.stringify(trips));
-
-    renderTrips();
-    form.reset();
-  });
-
-  renderTrips();
-});
 
 </script>
