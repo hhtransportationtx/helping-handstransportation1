@@ -596,13 +596,22 @@ document.addEventListener("DOMContentLoaded", function () {
   form.addEventListener("submit", function (e) {
     e.preventDefault();
 
-    const trip = {
-  member: form.querySelector('[name="member"]').value,
-  pickup: form.querySelector('[name="pickup"]').value,
-  dropoff: form.querySelector('[name="dropoff"]').value,
-  date: form.querySelector('[name="date"]').value,
-  time: form.querySelector('[name="time"]').value,
-  mobility: form.querySelector('[name="mobility"]').value,
+   const member = document.getElementById("memberName").value;
+const pickup = document.getElementById("pickupAddress").value;
+const dropoff = document.getElementById("dropoffAddress").value;
+const mobility = document.getElementById("mobilityType").value;
+const date = document.getElementById("pickupDate").value;
+const time = document.getElementById("pickupTime").value;
+
+console.log({ member, pickup, dropoff, mobility, date, time });
+
+const trip = {
+  member,
+  pickup,
+  dropoff,
+  date,
+  time,
+  mobility,
   status: "Scheduled"
 };
 
