@@ -609,10 +609,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
   trips.push(trip);
   localStorage.setItem("trips", JSON.stringify(trips));
-
+JSON.stringify(trips));
   renderTrips();
   form.reset();
 });
+
+    renderTRIPS()
+    });
+    
+    
 
         function initializeFleetData() {
             if (!window.helpingHands) return;
