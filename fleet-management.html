@@ -593,34 +593,26 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 }
 
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
+ form.addEventListener("submit", function (e) {
+  e.preventDefault();
 
-   const member = document.getElementById("memberName").value;
-const pickup = document.getElementById("pickupAddress").value;
-const dropoff = document.getElementById("dropoffAddress").value;
-const mobility = document.getElementById("mobilityType").value;
-const date = document.getElementById("pickupDate").value;
-const time = document.getElementById("pickupTime").value;
+  const trip = {
+    member: document.getElementById("memberName").value,
+    pickup: document.getElementById("pickupAddress").value,
+    dropoff: document.getElementById("dropoffAddress").value,
+    date: document.getElementById("pickupDate").value,
+    time: document.getElementById("pickupTime").value,
+    mobility: document.getElementById("mobilityType").value,
+    status: "Scheduled"
+  };
 
-console.log({ member, pickup, dropoff, mobility, date, time });
+  trips.push(trip);
+  localStorage.setItem("trips", JSON.stringify(trips));
 
-const trip = {
-  member,
-  pickup,
-  dropoff,
-  date,
-  time,
-  mobility,
-  status: "Scheduled"
-};
+  renderTrips();
+  form.reset();
+});
 
-    trips.push(trip);
-    localStorage.setItem("trips", JSON.stringify(trips));
-
-    renderTrips();
-    form.reset();
-  });
 
   renderTrips();
 });
