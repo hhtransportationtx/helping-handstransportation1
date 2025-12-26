@@ -309,11 +309,23 @@
   </div>
 </section>
     <form id="createTripForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <input class="border p-2 rounded" placeholder="Member Name" id="memberName" required>
-      <input class="border p-2 rounded" placeholder="Pickup Address" id="pickupAddress" required>
-      <input class="border p-2 rounded" placeholder="Dropoff Address" id="dropoffAddress" required>
+      <input class="border p-2 rounded"
+       placeholder="Member Name"
+       id="memberName"
+       name="member">
 
-      <select class="border p-2 rounded" id="mobilityType">
+<input class="border p-2 rounded"
+       placeholder="Pickup Address"
+       id="pickupAddress"
+       name="pickup">
+
+<input class="border p-2 rounded"
+       placeholder="Dropoff Address"
+       id="dropoffAddress"
+       name="dropoff">
+      <select class="border p-2 rounded"
+        id="mobilityType"
+        name="mobility">
         <option>Ambulatory</option>
         <option>Wheelchair</option>
         <option>Stretcher</option>
