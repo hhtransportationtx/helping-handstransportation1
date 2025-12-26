@@ -580,16 +580,17 @@ document.addEventListener("DOMContentLoaded", function () {
   table.innerHTML = "";
   trips.forEach(trip => {
     table.innerHTML += `
-      <tr>
-        <td class="border p-2">${trip.member}</td>
-        <td class="border p-2">${trip.pickup}</td>
-        <td class="border p-2">${trip.dropoff}</td>
-        <td class="border p-2">${trip.date}</td>
-        <td class="border p-2">${trip.time}</td>
-        <td class="border p-2">${trip.mobility}</td>
-        <td class="border p-2 font-semibold">${trip.status}</td>
-      </tr>
-    `;
+  <tr>
+    <td>${trip.member}</td>
+    <td>${trip.pickup}</td>
+    <td>${trip.dropoff}</td>
+    <td>${trip.date}</td>
+    <td>${trip.time}</td>
+    <td>${trip.mobility}</td>
+    <td>${trip.status}</td>
+  </tr>
+`;
+
   });
 }
 
