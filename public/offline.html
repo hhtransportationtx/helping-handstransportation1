@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offline - HealthHub Driver</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 12px;
+      padding: 40px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+
+    .icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+      background: #f3f4f6;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+    }
+
+    h1 {
+      color: #1f2937;
+      font-size: 24px;
+      margin-bottom: 12px;
+    }
+
+    p {
+      color: #6b7280;
+      font-size: 16px;
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+
+    .button {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.2s;
+    }
+
+    .button:hover {
+      background: #1d4ed8;
+    }
+
+    .status {
+      margin-top: 16px;
+      font-size: 14px;
+      color: #9ca3af;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="icon">📡</div>
+    <h1>You're Offline</h1>
+    <p>It looks like you've lost your internet connection. Don't worry, your trip data is saved locally and will sync when you're back online.</p>
+    <button class="button" onclick="location.reload()">Try Again</button>
+    <div class="status" id="status">Checking connection...</div>
+  </div>
+
+  <script>
+    function checkConnection() {
+      const status = document.getElementById('status');
+      if (navigator.onLine) {
+        status.textContent = 'Connection detected! Refreshing...';
+        setTimeout(() => location.reload(), 1000);
+      } else {
+        status.textContent = 'Still offline. Waiting for connection...';
+      }
+    }
+
+    window.addEventListener('online', () => {
+      document.getElementById('status').textContent = 'Connection restored! Refreshing...';
+      setTimeout(() => location.reload(), 1000);
+    });
+
+    setInterval(checkConnection, 3000);
+  </script>
+</body>
+</html>
